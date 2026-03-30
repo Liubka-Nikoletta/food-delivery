@@ -1,4 +1,4 @@
-import ShopsPage from "./pages/Shops/ShopsPage.tsx";
+import ShopsPage from "./pages/ShopsPage.tsx";
 import { Routes, Route } from "react-router-dom";
 import ShopDetailsPage from "./pages/ShopDetailsPage.tsx";
 

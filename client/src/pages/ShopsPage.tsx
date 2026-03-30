@@ -1,11 +1,11 @@
-import Header from "../../components/layout/Header.tsx";
-import api from '../../api/api.ts';
+import Header from "../components/layout/Header.tsx";
+import api from '../api/api.ts';
 import {useEffect, useState} from "react";
-import type IShop from "../../types/shop.ts";
-import Card from "../../components/ui/Card.tsx";
-import CardList from "../../components/ui/CardList.tsx";
+import type IShop from "../types/shop.ts";
+import Card from "../components/ui/Card.tsx";
+import CardList from "../components/ui/CardList.tsx";
 import { useNavigate } from "react-router-dom";
-import { encodeId } from "../../utils/hashids.ts";
+import { encodeId } from "../utils/hashids.ts";
 
 const ShopsPage = () => {
     const [shops, setShops] = useState<IShop[]>([]);
@@ -38,7 +38,7 @@ const ShopsPage = () => {
                                 title={shop.name}
                                 image={shop.logo_url}
                                 rating={shop.rating}
-                                onClick={() => navigate(`/shops/${encodeId(rawId)}`)}
+                                onClick={() => navigate(`/shops/${encodeId(rawId)}`, { state: { shop } })}
                             />
                         )
                     })}

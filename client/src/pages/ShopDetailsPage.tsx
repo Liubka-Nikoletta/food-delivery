@@ -1,10 +1,11 @@
 import {useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
+import {useParams, useLocation} from "react-router-dom";
 import {decodeId} from "../utils/hashids.ts";
 import api from "../api/api.ts";
 import Header from "../components/layout/Header.tsx";
 import CardList from "../components/ui/CardList.tsx";
 import Card from "../components/ui/Card.tsx";
+import type IShop from "../types/shop.ts";
 
 interface IProduct {
     _id: string;
@@ -15,8 +16,11 @@ interface IProduct {
 
 const ShopDetailsPage = () => {
     const {hash} = useParams<{ hash: string }>();
+    const location = useLocation();
     const [products, setProducts] = useState<IProduct[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    const shop = location.state?.shop as IShop | undefined;
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -48,7 +52,16 @@ const ShopDetailsPage = () => {
         <div>
             <Header/>
             <main className="main p-6 max-w-7xl mx-auto">
-                <h1 className="text-2xl font-bold mb-6">Menu</h1>
+                {shop && (
+                    <div className="mb-8 flex items-center gap-4">
+                        <img src={shop.logo_url} alt={shop.name} className="w-20 h-20 rounded-lg object-cover" />
+                        <div>
+                            <h1 className="text-3xl font-bold">{shop.name}</h1>
+                            <p className="text-gray-500">Rating: {shop.rating}</p>
+                        </div>
+                    </div>
+                )}
+                <h2 className="text-2xl font-bold mb-6">Menu</h2>
                 {isLoading ? (
                     <p>Loading products...</p>
                 ) : (
