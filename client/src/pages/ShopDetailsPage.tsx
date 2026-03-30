@@ -6,6 +6,7 @@ import Header from "../components/layout/Header.tsx";
 import CardList from "../components/ui/CardList.tsx";
 import Card from "../components/ui/Card.tsx";
 import type IShop from "../types/shop.ts";
+import { useCart } from "../context/CartContext.tsx";
 
 interface IProduct {
     _id: string;
@@ -19,6 +20,8 @@ const ShopDetailsPage = () => {
     const location = useLocation();
     const [products, setProducts] = useState<IProduct[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
 
     const shop = location.state?.shop as IShop | undefined;
 
@@ -66,14 +69,36 @@ const ShopDetailsPage = () => {
                     <p>Loading products...</p>
                 ) : (
                     <CardList isEmpty={products.length === 0} emptyMessage='No products found.'>
-                        {products.map((product) => (
-                            <Card
-                                key={product._id}
-                                title={product.name}
-                                image={product.image_url}
-                                price={product.price}
-                            />
-                        ))}
+                        {products.map((product) => {
+                            const cartItem = cartItems.find(item => item._id === product._id);
+                            const currentShopId = decodeId(hash || '');
+
+                            return (
+                                <Card
+                                    key={product._id}
+                                    title={product.name}
+                                    image={product.image_url}
+                                    price={product.price}
+                                    quantityInCart={cartItem?.quantity}
+                                    onAddToCart={(e) => {
+                                        e.stopPropagation();
+                                        addToCart({ ...product, shop_id: currentShopId, quantity: 1 });
+                                    }}
+                                    onIncrement={(e) => {
+                                        e.stopPropagation();
+                                        updateQuantity(product._id, 1);
+                                    }}
+                                    onDecrement={(e) => {
+                                        e.stopPropagation();
+                                        if (cartItem && cartItem.quantity === 1) {
+                                            removeFromCart(product._id);
+                                        } else {
+                                            updateQuantity(product._id, -1);
+                                        }
+                                    }}
+                                />
+                            )
+                        })}
                     </CardList>
                 )}
             </main>

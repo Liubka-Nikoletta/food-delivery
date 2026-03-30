@@ -1,9 +1,16 @@
+import * as React from "react";
+import QuantityControl from "./QuantityControl.tsx";
+
 interface CardProps {
     title: string;
     image: string;
     rating?: number;
     price?: number;
     onClick?: () => void;
+    onAddToCart?: (e: React.MouseEvent) => void;
+    quantityInCart?: number;
+    onIncrement?: (e: React.MouseEvent) => void;
+    onDecrement?: (e: React.MouseEvent) => void;
 }
 
 const Card = (data: CardProps) => {
@@ -36,10 +43,26 @@ const Card = (data: CardProps) => {
                         </div>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-3 text-[14px] font-medium mt-1">
-                        <div className="flex items-center gap-1 text-(--color-accent)">
-                            <span>${data.price}</span>
+                    <div className="flex items-center justify-between mt-auto pt-4">
+                        <div className="flex items-center gap-1 font-bold text-lg">
+                            <span>{data.price}грн</span>
                         </div>
+
+                        {data.quantityInCart && data.quantityInCart > 0 && data.onIncrement && data.onDecrement ? (
+                            <QuantityControl
+                                quantity={data.quantityInCart}
+                                size="sm"
+                                onIncrement={data.onIncrement}
+                                onDecrement={data.onDecrement}
+                            />
+                        ) : (
+                            <button
+                                onClick={data.onAddToCart}
+                                className="bg-(--color-accent) text-(--color-text-heading) px-4 py-2 rounded-full font-bold text-[14px] hover:bg-(--color-accent-dark) transition-colors"
+                            >
+                                Add to Cart
+                            </button>
+                        )}
                     </div>
                 )}
             </div>
