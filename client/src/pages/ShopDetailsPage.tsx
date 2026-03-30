@@ -7,6 +7,8 @@ import CardList from "../components/ui/CardList.tsx";
 import Card from "../components/ui/Card.tsx";
 import type IShop from "../types/shop.ts";
 import { useCart } from "../context/CartContext.tsx";
+import ShopInfo from "../components/ui/ShopInfo.tsx";
+import ProductControls from "../components/ui/ProductControls.tsx";
 
 interface IProduct {
     _id: string;
@@ -26,6 +28,8 @@ const ShopDetailsPage = () => {
     const [categories, setCategories] = useState<string[]>(["All"]);
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
+    const [sortOption, setSortOption] = useState<string>("");
+
     useEffect(() => {
         const loadProducts = async () => {
             if (!hash) {
@@ -38,12 +42,16 @@ const ShopDetailsPage = () => {
             try {
                 const shopId = decodeId(hash);
 
-                const payload: { shop_id: string; category?: string } = {
+                const payload: { shop_id: string; category?: string; sortOption?: string } = {
                     shop_id: shopId
                 };
 
                 if (selectedCategory !== "All") {
                     payload.category = selectedCategory;
+                }
+
+                if (sortOption) {
+                    payload.sortOption = sortOption;
                 }
 
                 const response = await api.post('/products', payload);
@@ -57,37 +65,24 @@ const ShopDetailsPage = () => {
             }
         }
         loadProducts();
-    }, [hash, selectedCategory]);
+    }, [hash, selectedCategory, sortOption]);
 
     return (
         <div>
             <Header/>
             <main className="main p-6 max-w-7xl mx-auto">
-                {shop && (
-                    <div className="mb-8 flex items-center gap-4">
-                        <img src={shop.logo_url} alt={shop.name} className="w-20 h-20 rounded-lg object-cover" />
-                        <div>
-                            <h1 className="text-3xl font-bold">{shop.name}</h1>
-                            <p className="text-gray-500">Rating: {shop.rating}</p>
-                        </div>
-                    </div>
-                )}
+                {shop && <ShopInfo shop={shop} />}
+
                 <h2 className="text-2xl font-bold mb-6">Menu</h2>
-                <div className="flex items-center gap-2 mb-5">
-                    {categories.map(category => (
-                        <button
-                            key={category}
-                            onClick={() => setSelectedCategory(category)}
-                            className={`px-5 py-2 rounded-full font-semibold text-[15px] whitespace-nowrap transition-colors duration-200 ${
-                                selectedCategory === category
-                                    ? "bg-(--color-accent) text-(--color-text-heading) border border-(--color-accent)"
-                                    : "bg-white text-(--color-text) border border-(--color-border-strong) hover:border-(--color-accent-border)"
-                            }`}
-                        >
-                            {category}
-                        </button>
-                    ))}
-                </div>
+
+                <ProductControls
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    onSelectCategory={setSelectedCategory}
+                    sortOption={sortOption}
+                    onSortChange={setSortOption}
+                />
+
                 {isLoading ? (
                     <p>Loading products...</p>
                 ) : (
