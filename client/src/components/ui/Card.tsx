@@ -3,11 +3,13 @@ interface CardProps {
     image: string;
     rating?: number;
     price?: number;
+    onClick?: () => void;
 }
 
 const Card = (data: CardProps) => {
     return (
         <li
+            onClick={data.onClick}
             key={data.title}
             className="bg-white rounded-[20px] border border-(--color-border) overflow-hidden hover:border-(--color-accent) transition-colors duration-200 cursor-pointer flex flex-col"
         >
@@ -36,7 +38,7 @@ const Card = (data: CardProps) => {
                 ) : (
                     <div className="flex items-center gap-3 text-[14px] font-medium mt-1">
                         <div className="flex items-center gap-1 text-(--color-accent)">
-                            <span>{data.price}</span>
+                            <span>${data.price}</span>
                         </div>
                     </div>
                 )}

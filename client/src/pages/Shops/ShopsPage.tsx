@@ -4,9 +4,12 @@ import {useEffect, useState} from "react";
 import type IShop from "../../types/shop.ts";
 import Card from "../../components/ui/Card.tsx";
 import CardList from "../../components/ui/CardList.tsx";
+import { useNavigate } from "react-router-dom";
+import { encodeId } from "../../utils/hashids.ts";
 
 const ShopsPage = () => {
     const [shops, setShops] = useState<IShop[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadShops = async () => {
@@ -26,9 +29,19 @@ const ShopsPage = () => {
             <Header/>
             <main className="main p-6 max-w-7xl mx-auto">
                 <CardList isEmpty={shops.length === 0} emptyMessage='No stores found'>
-                    {shops.map((shop) => (
-                        <Card key={shop.name} title={shop.name} image={shop.logo_url} rating={shop.rating} />
-                    ))}
+                    {shops.map((shop) => {
+                        const rawId = shop._id;
+
+                        return (
+                            <Card
+                                key={rawId}
+                                title={shop.name}
+                                image={shop.logo_url}
+                                rating={shop.rating}
+                                onClick={() => navigate(`/shops/${encodeId(rawId)}`)}
+                            />
+                        )
+                    })}
                 </CardList>
             </main>
         </div>
