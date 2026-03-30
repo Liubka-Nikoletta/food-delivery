@@ -4,7 +4,21 @@ import Shop from '../models/Shop.js';
 class ShopController {
     async getShops(req: Request, res: Response) {
         try{
-            const shops = await Shop.find({});
+            const { rating } = req.query;
+
+            let filter: any = {};
+
+            if (rating && rating !== 'Всі') {
+                if (rating === '4-5') {
+                    filter.rating = { $gte: 4, $lte: 5 };
+                } else if (rating === '3-4') {
+                    filter.rating = { $gte: 3, $lt: 4 };
+                } else if (rating === '2-3') {
+                    filter.rating = { $gte: 2, $lt: 3 };
+                }
+            }
+
+            const shops = await Shop.find(filter);
 
             return res.status(200).json(shops);
         }catch(err: any){
