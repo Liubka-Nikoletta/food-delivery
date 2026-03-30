@@ -5,15 +5,26 @@ import { decodeId } from '../utils/hashid.js';
 class ProductController {
     async getProductsByShopId(req: Request, res: Response){
         try{
-            const { shop_id } = req.body;
+            const { shop_id, category } = req.body;
 
             if (!shop_id) {
                 return res.status(400).json({ message: "shop_id is missing in request body" });
             }
 
-            const products = await Product.find({ shop_id: shop_id });
+            const categories = await Product.distinct("category", { shop_id: shop_id });
 
-            return res.status(200).json(products);
+            const filter: any = { shop_id: shop_id };
+
+            if (category && category !== "All") {
+                filter.category = category;
+            }
+
+            const products = await Product.find(filter);
+
+            return res.status(200).json({
+                products: products,
+                categories: categories
+            });
         }catch(err){
             console.log(err, 'Error in getting products');
             res.status(400).send({error: 'Products not found'});

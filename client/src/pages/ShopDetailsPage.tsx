@@ -20,10 +20,11 @@ const ShopDetailsPage = () => {
     const location = useLocation();
     const [products, setProducts] = useState<IProduct[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-
     const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
-
     const shop = location.state?.shop as IShop | undefined;
+
+    const [categories, setCategories] = useState<string[]>(["All"]);
+    const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -32,24 +33,31 @@ const ShopDetailsPage = () => {
                 return;
             }
 
+            setIsLoading(true);
+
             try {
                 const shopId = decodeId(hash);
 
-                const response = await api.post('/products', {
+                const payload: { shop_id: string; category?: string } = {
                     shop_id: shopId
-                });
+                };
 
-                setProducts(response.data);
-                setIsLoading(false);
+                if (selectedCategory !== "All") {
+                    payload.category = selectedCategory;
+                }
+
+                const response = await api.post('/products', payload);
+
+                setProducts(response.data.products);
+                setCategories(["All", ...response.data.categories]);
             } catch (error) {
                 console.log(error, 'Error loading products');
             } finally {
                 setIsLoading(false);
             }
         }
-
         loadProducts();
-    }, [hash]);
+    }, [hash, selectedCategory]);
 
     return (
         <div>
@@ -65,6 +73,21 @@ const ShopDetailsPage = () => {
                     </div>
                 )}
                 <h2 className="text-2xl font-bold mb-6">Menu</h2>
+                <div className="flex items-center gap-2 mb-5">
+                    {categories.map(category => (
+                        <button
+                            key={category}
+                            onClick={() => setSelectedCategory(category)}
+                            className={`px-5 py-2 rounded-full font-semibold text-[15px] whitespace-nowrap transition-colors duration-200 ${
+                                selectedCategory === category
+                                    ? "bg-(--color-accent) text-(--color-text-heading) border border-(--color-accent)"
+                                    : "bg-white text-(--color-text) border border-(--color-border-strong) hover:border-(--color-accent-border)"
+                            }`}
+                        >
+                            {category}
+                        </button>
+                    ))}
+                </div>
                 {isLoading ? (
                     <p>Loading products...</p>
                 ) : (
