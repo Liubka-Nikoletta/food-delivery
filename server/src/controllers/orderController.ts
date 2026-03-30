@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import Order from '../models/Order.js';
 import IOrder from "../types/order.js";
-import mongoose, {QueryFilter} from "mongoose";
+import {QueryFilter} from "mongoose";
 
 class OrderController {
     async createOrder(req: Request, res: Response) {
