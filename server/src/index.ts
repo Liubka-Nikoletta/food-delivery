@@ -5,6 +5,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import shopRoutes from "./routes/shopRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import {encodeId} from "./utils/hashid.js";
+import cors from 'cors';
 
 dotenv.config();
 
@@ -13,7 +14,15 @@ const app = express();
 
 connectDB();
 
+app.use(cors());
 app.use(express.json());
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
+
 app.use('/api', orderRoutes);
 app.use('/api', shopRoutes);
 app.use('/api', productRoutes);
