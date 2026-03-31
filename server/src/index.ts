@@ -23,7 +23,7 @@ const app = express();
 
 app.use(helmet({
     referrerPolicy: { policy: 'no-referrer-when-downgrade' },
-    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
