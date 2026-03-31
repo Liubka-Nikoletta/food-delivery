@@ -17,7 +17,7 @@ connectDB();
 
 app.use(cors({
     origin: [
-        'https://your-app.vercel.app',
+        'https://food-delivery-qcwz.onrender.com',
         'http://localhost:5173'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
