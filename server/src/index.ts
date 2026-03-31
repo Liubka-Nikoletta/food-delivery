@@ -9,6 +9,7 @@ import {encodeId} from "./utils/hashid.js";
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import helmet from 'helmet';
 
 dotenv.config();
 
@@ -19,6 +20,19 @@ const clientPath = path.join(__dirname, '../../client/dist');
 
 const PORT = process.env.PORT || 5000;
 const app = express();
+
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            connectSrc: ["'self'", "https:"],
+            scriptSrc:  ["'self'", "'unsafe-inline'"],
+            styleSrc:   ["'self'", "'unsafe-inline'"],
+            imgSrc:     ["'self'", "data:", "blob:", "https:"],
+            fontSrc:    ["'self'", "https:", "data:"],
+        },
+    },
+}));
 
 connectDB();
 
