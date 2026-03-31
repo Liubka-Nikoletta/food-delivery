@@ -2,6 +2,25 @@
 Web application where users can order food delivery from various shops.
 **Completed Level: Advanced** 
 ---
+## Live Demo
+[food-delivery.com](https://food-delivery-qcwz.onrender.com)
+
+## Screenshots
+- Shops page
+![Shops Page](./screenshots/shops.png)
+
+- Products page
+![Products Page](./screenshots/products.png)
+
+- Cart Page
+![Cart Page](./screenshots/order.png)
+
+- History
+![History Page](./screenshots/history.png)
+
+- Coupons
+![Coupon Page](./screenshots/coupons.png)
+
 ## Features
 
 ### Base Level 
