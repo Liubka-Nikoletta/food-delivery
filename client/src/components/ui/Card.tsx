@@ -25,6 +25,7 @@ const Card = (data: CardProps) => {
                     src={data.image}
                     alt={`${data.title} cover`}
                     className="w-full h-full object-cover"
+                    crossOrigin="anonymous"
                 />
             </div>
 

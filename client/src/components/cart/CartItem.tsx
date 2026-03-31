@@ -16,6 +16,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
                         src={item.image_url}
                         alt={item.name}
                         className="w-full h-full object-cover"
+                        crossOrigin="anonymous"
                     />
                 </div>
                 <div>

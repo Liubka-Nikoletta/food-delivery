@@ -76,7 +76,7 @@ const HistoryPage = () => {
                             <div className="flex gap-4 overflow-x-auto pb-2">
                                 {order.items.map((item: any) => (
                                     <div key={item._id} className="shrink-0 text-center w-24">
-                                        <img src={item.productId.image_url} className="w-16 h-16 object-cover rounded-lg mx-auto" />
+                                        <img src={item.productId.image_url} className="w-16 h-16 object-cover rounded-lg mx-auto" crossOrigin="anonymous"/>
                                         <p className="text-xs font-medium truncate mt-1">{item.productId.name}</p>
                                         <p className="text-xs text-(--color-text-muted)">x{item.quantity}</p>
                                     </div>
