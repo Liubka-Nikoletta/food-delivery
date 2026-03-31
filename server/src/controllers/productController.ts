@@ -5,13 +5,11 @@ import { decodeId } from '../utils/hashid.js';
 class ProductController {
     async getProductsByShopId(req: Request, res: Response){
         try{
-            const { shop_id, category, sortOption } = req.body;
+            const { shop_id, category, sortOption, page = 1, limit = 10 } = req.body;
 
             if (!shop_id) {
                 return res.status(400).json({ message: "shop_id is missing in request body" });
             }
-
-            const categories = await Product.distinct("category", { shop_id: shop_id });
 
             const filter: any = { shop_id: shop_id };
 
@@ -20,19 +18,29 @@ class ProductController {
             }
 
             let sortCriteria: any = {};
-            if (sortOption === 'price_asc') {
-                sortCriteria = { price: 1 };
-            } else if (sortOption === 'price_desc') {
-                sortCriteria = { price: -1 };
-            } else if (sortOption === 'name_asc') {
-                sortCriteria = { name: 1 };
-            }
+            if (sortOption === 'price_asc') sortCriteria = { price: 1 };
+            else if (sortOption === 'price_desc') sortCriteria = { price: -1 };
+            else if (sortOption === 'name_asc') sortCriteria = { name: 1 };
 
-            const products = await Product.find(filter).sort(sortCriteria);
+            const skip = (Number(page) - 1) * Number(limit);
+
+            const products = await Product.find(filter)
+                .sort(sortCriteria)
+                .skip(skip)
+                .limit(Number(limit));
+
+            const totalProducts = await Product.countDocuments(filter);
+            const hasMore = skip + products.length < totalProducts;
+
+            let categories: string[] = [];
+            if (Number(page) === 1) {
+                categories = await Product.distinct("category", { shop_id: shop_id });
+            }
 
             return res.status(200).json({
                 products: products,
-                categories: categories
+                categories: categories,
+                hasMore: hasMore
             });
         }catch(err){
             console.log(err, 'Error in getting products');
