@@ -22,6 +22,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(helmet({
+    referrerPolicy: { policy: 'no-referrer-when-downgrade' },
     crossOriginResourcePolicy: { policy: "cross-origin" },
     contentSecurityPolicy: {
         directives: {
