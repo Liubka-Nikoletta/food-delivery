@@ -1,5 +1,5 @@
 import type {ICartItem} from '../../types/cartItem.ts';
-import QuantityControl from "./QuantityControl.tsx";
+import QuantityControl from "../ui/QuantityControl.tsx";
 
 interface CartItemProps {
     item: ICartItem;

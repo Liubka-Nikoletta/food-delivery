@@ -1,5 +1,5 @@
 import * as React from "react";
-import InputField from "./InputField.tsx";
+import InputField from "../ui/InputField.tsx";
 
 interface OrderFormProps {
     formData: {

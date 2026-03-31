@@ -7,8 +7,8 @@ import CardList from "../components/ui/CardList.tsx";
 import Card from "../components/ui/Card.tsx";
 import type IShop from "../types/shop.ts";
 import { useCart } from "../context/CartContext.tsx";
-import ShopInfo from "../components/ui/ShopInfo.tsx";
-import ProductControls from "../components/ui/ProductControls.tsx";
+import ShopInfo from "../components/shop/ShopInfo.tsx";
+import ProductControls from "../components/shop/ProductControls.tsx";
 
 interface IProduct {
     _id: string;
