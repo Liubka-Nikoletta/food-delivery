@@ -8,6 +8,7 @@ interface CartContextType {
     updateQuantity: (id: string, amount: number) => void;
     clearCart: () => void;
     totalItems: number;
+    addManyToCart: (items: ICartItem[]) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -45,12 +46,29 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             prev.map(item => {
                 if (item._id === id) {
                     const newQuantity = item.quantity + amount;
-                    // Не дозволяємо кількість менше 1 (якщо 0 - краще видаляти через окрему кнопку)
                     return { ...item, quantity: newQuantity > 0 ? newQuantity : 1 };
                 }
                 return item;
             })
         );
+    };
+
+    const addManyToCart = (newItems: ICartItem[]) => {
+        setCartItems(prev => {
+            const updatedCart = [...prev];
+            newItems.forEach(newItem => {
+                const existingIndex = updatedCart.findIndex(item => item._id === newItem._id);
+
+                const price = Number(newItem.price);
+
+                if (existingIndex > -1) {
+                    updatedCart[existingIndex].quantity += newItem.quantity;
+                } else {
+                    updatedCart.push({ ...newItem, price });
+                }
+            });
+            return updatedCart;
+        });
     };
 
     const clearCart = () => {
@@ -60,7 +78,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart, totalItems }}>
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, addManyToCart }}>
             {children}
         </CartContext.Provider>
     );

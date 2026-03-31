@@ -7,6 +7,11 @@ class OrderController {
     async createOrder(req: Request, res: Response) {
         try{
             const data = req.body;
+
+            if (!data.items || data.items.length === 0) {
+                return res.status(400).json({ message: "Order items are required" });
+            }
+
             const order = new Order(data);
 
             await order.save();
@@ -21,17 +26,23 @@ class OrderController {
         try{
             const {email, phoneNumber} = req.body;
 
-            let filter: QueryFilter<IOrder> = {};
+            if (!email && !phoneNumber) {
+                return res.status(400).json({ message: "Email or Phone number is required for search" });
+            }
 
-            if(email){
+            let filter: any = {};
+
+            if (email) {
                 filter['userData.email'] = email;
             }
 
-            if(phoneNumber){
+            if (phoneNumber) {
                 filter['userData.phoneNumber'] = phoneNumber;
             }
 
-            const orders = await Order.find(filter).populate('items.productId');
+            const orders = await Order.find(filter)
+                .populate('items.productId')
+                .sort({ createdAt: -1 });
 
             return res.status(200).json(orders);
         }catch(err: any){

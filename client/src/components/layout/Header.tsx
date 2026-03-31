@@ -4,6 +4,8 @@ import { useCart } from "../../context/CartContext.tsx";
 const Header = () => {
     const location = useLocation();
     const isHomePage = location.pathname === '/';
+    const isCouponsPage = location.pathname === '/coupons';
+    const isHistoryPage = location.pathname === '/history';
 
     const { totalItems } = useCart();
 
@@ -29,6 +31,30 @@ const Header = () => {
                             }`}
                         >
                             Shops
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            to="/history"
+                            className={`block px-6 py-2.5 rounded-full font-bold text-[15px] transition-colors ${
+                                isHistoryPage
+                                    ? "bg-(--color-accent) text-(--color-text-heading) hover:bg-(--color-accent-dark)"
+                                    : "text-(--color-text) hover:text-(--color-text-heading) bg-transparent"
+                            }`}
+                        >
+                            History
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            to="/coupons"
+                            className={`block px-6 py-2.5 rounded-full font-bold text-[15px] transition-colors ${
+                                isCouponsPage
+                                    ? "bg-(--color-accent) text-(--color-text-heading) hover:bg-(--color-accent-dark)"
+                                    : "text-(--color-text) hover:text-(--color-text-heading) bg-transparent"
+                            }`}
+                        >
+                            Coupons
                         </Link>
                     </li>
                 </ul>

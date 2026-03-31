@@ -21,7 +21,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
                 <div>
                     <h3 className="font-bold text-[17px] text-(--color-text-heading)">{item.name}</h3>
                     <p className="text-[14px] text-(--color-text-muted) font-medium">
-                        ${item.price} × {item.quantity} = <span className="text-(--color-text-heading) font-bold">{item.price * item.quantity}грн</span>
+                        {item.price}грн × {item.quantity} = <span className="text-(--color-text-heading) font-bold">{item.price * item.quantity}грн</span>
                     </p>
                 </div>
             </div>

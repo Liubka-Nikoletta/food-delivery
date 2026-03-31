@@ -4,6 +4,7 @@ import connectDB from './config/db.js';
 import orderRoutes from "./routes/orderRoutes.js";
 import shopRoutes from "./routes/shopRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import couponRoutes from "./routes/couponRoutes.js";
 import {encodeId} from "./utils/hashid.js";
 import cors from 'cors';
 
@@ -26,6 +27,7 @@ app.use(cors({
 app.use('/api', orderRoutes);
 app.use('/api', shopRoutes);
 app.use('/api', productRoutes);
+app.use('/api', couponRoutes);
 
 app.get('/api/utils/encode/:id', (req, res) => {
     const { id } = req.params;

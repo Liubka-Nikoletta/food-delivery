@@ -11,6 +11,9 @@ const CartPage = () => {
     const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
     const navigate = useNavigate();
 
+    const [couponCode, setCouponCode] = useState("");
+    const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -22,7 +25,10 @@ const CartPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
 
-    const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const totalPrice = cartItems.reduce((sum, item) => {
+        const itemPrice = Number(item.price) || 0;
+        return sum + (itemPrice * item.quantity);
+    }, 0);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -95,6 +101,25 @@ const CartPage = () => {
         }
     };
 
+    const applyCoupon = async () => {
+        try {
+            const res = await api.get('/coupons');
+            const coupon = res.data.find((c: any) => c.code.toUpperCase() === couponCode.toUpperCase());
+
+            if (coupon) {
+                setAppliedCoupon(coupon);
+                setCouponCode("");
+            } else {
+                alert("Coupon not found or expired");
+            }
+        } catch (err) {
+            console.error("Error validating coupon");
+        }
+    };
+
+    const discount = appliedCoupon ? (totalPrice * appliedCoupon.value) / 100 : 0;
+    const finalTotal = totalPrice - discount;
+
     return (
         <div className="min-h-screen flex flex-col">
             <Header />
@@ -133,6 +158,12 @@ const CartPage = () => {
                             totalPrice={totalPrice}
                             onChange={handleChange}
                             onSubmit={handleSubmit}
+                            couponCode={couponCode}
+                            onCouponChange={setCouponCode}
+                            onApplyCoupon={applyCoupon}
+                            appliedCoupon={appliedCoupon}
+                            discount={discount}
+                            finalTotal={finalTotal}
                         />
                     </div>
                 )}
