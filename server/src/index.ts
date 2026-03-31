@@ -46,8 +46,8 @@ app.get('/api/utils/encode/:id', (req, res) => {
 
 app.use(express.static(clientPath));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(clientPath, 'index.html'));
+app.get('*path', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
