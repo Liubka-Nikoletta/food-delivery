@@ -25,13 +25,10 @@ app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
     crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
+        useDefaults: true,
         directives: {
-            defaultSrc: ["'self'"],
-            connectSrc: ["'self'", "https:"],
-            scriptSrc:  ["'self'", "'unsafe-inline'"],
-            styleSrc:   ["'self'", "'unsafe-inline'"],
-            imgSrc: ["'self'", "data:", "blob:", "https://*.unsplash.com"],
-            fontSrc:    ["'self'", "https:", "data:"],
+            "img-src": ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://*.unsplash.com"],
+            "connect-src": ["'self'", "https:"],
         },
     },
 }));
